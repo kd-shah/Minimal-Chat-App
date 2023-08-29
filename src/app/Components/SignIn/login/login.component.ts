@@ -28,7 +28,7 @@ export class LoginComponent {
           console.log('Login response:', response); 
           alert(response.message);
           this.auth.storeToken(response.token)
-          this.auth.storeName(response.userInfo.name)
+          this.auth.storeDetails(response.userInfo.name, response.userInfo.id)
           this.router.navigate(['/dashboard'])
          this.loginForm.reset();
          

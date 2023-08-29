@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { MessageService } from 'src/app/Services/message.service';
 import { UserService } from 'src/app/Services/user.service';
 
 @Component({
@@ -8,10 +9,12 @@ import { UserService } from 'src/app/Services/user.service';
 })
 export class UserListComponent {
 
-  public users: any =[]
-
+  public users: any =[];
+  
   constructor(private user: UserService ){
   }
+
+  @Output() openChat = new EventEmitter<number>();
 
   ngOnInit(){
     this.user.getUsers()
@@ -20,4 +23,6 @@ export class UserListComponent {
       console.log(response);
     })
   }
+
+  
 }

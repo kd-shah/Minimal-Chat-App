@@ -10,6 +10,7 @@ import { DashboardComponent } from './Components/Chat/dashboard/dashboard.compon
 import { AuthGuard } from './Guards/auth.guard';
 import { TokenInterceptor } from './Interceptors/token.interceptor';
 import { UserListComponent } from './Components/Chat/user-list/user-list.component';
+import { ChatComponent } from './Components/Chat/chat/chat.component';
 
 @NgModule({
   declarations: [
@@ -17,7 +18,8 @@ import { UserListComponent } from './Components/Chat/user-list/user-list.compone
     RegisterComponent,
     LoginComponent,
     DashboardComponent,
-    UserListComponent
+    UserListComponent,
+    ChatComponent
   ],
   imports: [
     BrowserModule,

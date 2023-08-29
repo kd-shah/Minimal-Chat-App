@@ -1,4 +1,7 @@
-<div *ngFor= "let user of users">
-    <li class="userName">{{user.name}}</li>
+<div *ngFor="let user of users">
+    <li class="userName" >
+        <a [routerLink]="[{ outlets: { chatOutlet: ['chat', user.id] } }]">{{ user.name }}</a>
+    </li>
     <hr class="line">
+    
 </div>

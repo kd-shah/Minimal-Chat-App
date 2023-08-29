@@ -1,0 +1,29 @@
+.chat{
+    background-color: blue;
+}
+li{
+    list-style: none;
+}
+.sentClass{
+    background-color: blanchedalmond;
+    align-self: flex-end;
+    margin-right: 10px;    
+}
+.receivedClass{
+    background-color: beige;
+    align-self: flex-start;
+    margin-left: 10px;
+}
+.messages{
+    display: flex;
+    flex-direction: column;
+    margin: 10px;
+}
+.message-block {
+    height: 30px;
+    width: 300px;
+    display: flex;
+    justify-content: center;
+    padding-top: 10px;
+    border-radius: 20px;
+  }

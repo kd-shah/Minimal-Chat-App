@@ -29,11 +29,17 @@ export class AuthService {
     return localStorage.getItem('auth-token')
   }
 
-  storeName(name: string){
+  storeDetails(name: string, id: number){
     localStorage.setItem('user-name', name )
+    localStorage.setItem('user-id', id.toString() )
   }
+
   getName() : string | null{
     return localStorage.getItem('user-name')
+  }
+
+  getUserId() : string | null{
+    return localStorage.getItem('user-id')
   }
 
   removetoken() {

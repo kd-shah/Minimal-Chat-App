@@ -1,0 +1,9 @@
+
+<div *ngFor = "let message of messages" class="messages">
+    
+    <li [ngClass] = "['message-block' ,message.senderId == loggedInUserId ? 'sentClass' : 'receivedClass']">
+        
+        {{message.content}}
+        
+    </li>
+</div>
