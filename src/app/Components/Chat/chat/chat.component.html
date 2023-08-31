@@ -1,9 +1,49 @@
+<div class="chat">
+    <div class="user-chat">
 
-<div *ngFor = "let message of messages" class="messages">
-    
-    <li [ngClass] = "['message-block' ,message.senderId == loggedInUserId ? 'sentClass' : 'receivedClass']">
-        
-        {{message.content}}
-        
-    </li>
+        <div *ngFor="let eachMessage of messages" class="messages" (contextmenu)="openContextMenu($event, eachMessage)">
+            <li *ngIf="eachMessage.isEditing==false"
+                [ngClass]="['message-block', eachMessage.senderId == loggedInUserId ? 'sentClass' : 'receivedClass']">
+
+                {{eachMessage.content}}
+
+            </li>
+            <li *ngIf="eachMessage.isEditing==true"
+                [ngClass]="['message-block', eachMessage.senderId == loggedInUserId ? 'sentClass' : 'receivedClass']">
+
+                <form [formGroup]="editForm">
+                    <input value={{eachMessage.content}} formControlName="editedMessage">
+
+                    <button type="submit" (click)="onSaveChanges()">
+                        Save
+                    </button>
+
+                    <button (click)="onCancelChanges()">
+                        Cancel
+                    </button>
+                </form>
+
+
+            </li>
+
+
+        </div>
+
+        <div *ngIf="contextMenuVisible" [style.left.px]="contextMenuX" [style.top.px]="contextMenuY"
+            class="context-menu">
+
+            <ul>
+                <li (click)="onEditMessage()">Edit</li>
+                <li>Delete</li>
+            </ul>
+
+        </div>
+
+
+    </div>
+    <form class="message-box" [formGroup]="sendForm">
+        <input placeholder="Message" class="message" formControlName="message">
+        <button type="submit" (click)="onSendMessage()" class="button">Send</button>
+    </form>
+
 </div>

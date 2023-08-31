@@ -14,7 +14,7 @@ export class UserListComponent {
   constructor(private user: UserService ){
   }
 
-  @Output() openChat = new EventEmitter<number>();
+  // @Output() openChat = new EventEmitter<number>();
 
   ngOnInit(){
     this.user.getUsers()

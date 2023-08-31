@@ -3,13 +3,9 @@
 
 <div class="userDash">
     <div class="userList">
-        <!-- <app-user-list (openChat)="openChat($event)"></app-user-list> -->
         <app-user-list></app-user-list>
     </div>
-    <!-- <div *ngIf="selectedUserId !== null"> -->
     <div class="chat">
-        <!-- <app-chat [userId]="selectedUserId"></app-chat> -->
         <router-outlet name="chatOutlet"></router-outlet>
     </div>
-
 </div>

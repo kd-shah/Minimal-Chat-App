@@ -1,24 +1,25 @@
-.chat{
-    background-color: blue;
-}
-li{
+li {
     list-style: none;
 }
-.sentClass{
+
+.sentClass {
     background-color: blanchedalmond;
     align-self: flex-end;
-    margin-right: 10px;    
+    margin-right: 10px;
 }
-.receivedClass{
+
+.receivedClass {
     background-color: beige;
     align-self: flex-start;
     margin-left: 10px;
 }
-.messages{
+
+.messages {
     display: flex;
     flex-direction: column;
     margin: 10px;
 }
+
 .message-block {
     height: 30px;
     width: 300px;
@@ -26,4 +27,41 @@ li{
     justify-content: center;
     padding-top: 10px;
     border-radius: 20px;
-  }
+}
+
+.user-chat {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: auto;
+}
+
+.message-box {
+    position: fixed;
+    bottom: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: rgb(58, 58, 58);
+}
+
+.context-menu {
+    position: fixed;
+    background-color: white;
+    border: 1px solid #ccc;
+    z-index: 10;
+}
+
+.message {
+    width: 900px;
+    height: 20px;
+    padding: 5px;
+}
+
+.button {
+    height: 30px;
+    padding: 5px 40px;
+    margin: 0px 15px;
+
+}

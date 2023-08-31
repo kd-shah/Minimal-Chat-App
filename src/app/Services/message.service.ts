@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Subject, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -7,9 +8,28 @@ import { Injectable } from '@angular/core';
 export class MessageService {
 
   private baseUrl: string = "https://localhost:7034/api/"
+
+  private messageCreatedSubject = new Subject<any>();
+
+  messageCreated$ = this.messageCreatedSubject.asObservable();
+
+  
+
   constructor(private http: HttpClient) { }
 
-  getMessages(userId : any){
+  getMessages(userId : number){
     return this.http.get<any>(`${this.baseUrl}messages?userId=${userId}`)
+  }
+
+  receiverId : number | null = null;
+
+  sendMessages(userId : number | null, content : any){
+    const requestBody = { content: content };
+    return this.http.post<any>(`${this.baseUrl}messages?receiverId=${userId}`, requestBody) 
+    .pipe(
+      tap((response: any) => {
+        this.messageCreatedSubject.next(response); 
+      })
+    );
   }
 }

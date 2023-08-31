@@ -20,7 +20,6 @@ export class LoginComponent {
   }
   onLogin(){
     if(this.loginForm.valid){
-      console.log(this.loginForm.value)
       //send object to db
       this.auth.login(this.loginForm.value)
       .subscribe({

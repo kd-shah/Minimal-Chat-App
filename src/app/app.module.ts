@@ -12,6 +12,7 @@ import { TokenInterceptor } from './Interceptors/token.interceptor';
 import { UserListComponent } from './Components/Chat/user-list/user-list.component';
 import { ChatComponent } from './Components/Chat/chat/chat.component';
 
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -19,7 +20,7 @@ import { ChatComponent } from './Components/Chat/chat/chat.component';
     LoginComponent,
     DashboardComponent,
     UserListComponent,
-    ChatComponent
+    ChatComponent,
   ],
   imports: [
     BrowserModule,
