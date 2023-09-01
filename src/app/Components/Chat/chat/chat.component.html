@@ -12,7 +12,7 @@
                 [ngClass]="['message-block', eachMessage.senderId == loggedInUserId ? 'sentClass' : 'receivedClass']">
 
                 <form [formGroup]="editForm">
-                    <input value={{eachMessage.content}} formControlName="editedMessage">
+                    <input formControlName="editedMessage">
 
                     <button type="submit" (click)="onSaveChanges()">
                         Save
@@ -34,7 +34,7 @@
 
             <ul>
                 <li (click)="onEditMessage()">Edit</li>
-                <li>Delete</li>
+                <li (click)="onDeleteMessage()">Delete</li>
             </ul>
 
         </div>

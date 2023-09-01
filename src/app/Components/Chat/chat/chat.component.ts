@@ -66,20 +66,30 @@ export class ChatComponent implements OnInit {
       editedMessage: ['', Validators.required]
     })
 
-    this.message.messageCreated$.subscribe((newMessage: any) => {
-      this.messages.push(newMessage);
-    });
+    // this.message.messageCreated$.subscribe((newMessage: any) => {
+    //   console.log('New message received:', newMessage);
+    //   this.messages.push(newMessage);
+    // });
   }
 
 
   onSendMessage() {
     this.sentMessage = this.sendForm.value.message;
     if (this.message.receiverId !== null && this.sentMessage !== '') {
-      this.message.sendMessages(this.message.receiverId, this.sentMessage)
+      const receiverId = this.message.receiverId;
+      this.message.sendMessages(receiverId, this.sentMessage)
         .subscribe(response => {
           console.log('Message sent:', response);
           this.sendForm.reset();
+          this.message.getMessages(receiverId).subscribe((response: any[]) => {
+            this.messages = response.map((msg: Message) => ({
+              ...msg,
+              isEditing: false,
+            }))
+          }
+          );
         })
+
     }
   }
 
@@ -108,18 +118,58 @@ export class ChatComponent implements OnInit {
   onEditMessage() {
     if (this.contextMenuMessage !== null) {
       this.contextMenuMessage.isEditing = true;
+      this.editForm.patchValue({ editedMessage: this.contextMenuMessage.content });
     }
     this.closeContextMenu();
   }
 
   onSaveChanges() {
-    if (this.contextMenuMessage !== null) {
-      this.contextMenuMessage.content = this.editForm.value.editedMessage;
+    if (this.contextMenuMessage !== null && this.contextMenuMessage.id !== null) {
+      const receiverId = this.message.receiverId;
+      if (receiverId !== null) {
+        this.message.editMessage(this.contextMenuMessage.id, this.editForm.value.editedMessage)
+          .subscribe(response => {
+            console.log('Message edited:', response);
+            this.editForm.reset();
+            this.message.getMessages(receiverId).subscribe((response: any[]) => {
+              this.messages = response.map((msg: Message) => ({
+                ...msg,
+                isEditing: false,
+              }))
+            }
+            );
+
+          })
+      }
+    }
+    else {
+      console.log("Erros found");
     }
   }
 
   onCancelChanges() {
+    if (this.contextMenuMessage !== null) {
+      this.contextMenuMessage.isEditing = false;
+    }
+    this.closeContextMenu();
+  }
 
+  onDeleteMessage() {
+    if (this.contextMenuMessage !== null) {
+      const receiverId = this.message.receiverId;
+      if (receiverId !== null) {
+        this.message.deleteMessage(this.contextMenuMessage.id).subscribe(response => {
+          console.log(response);
+          this.message.getMessages(receiverId).subscribe((response: any[]) => {
+            this.messages = response.map((msg: Message) => ({
+              ...msg,
+              isEditing: false,
+            }))
+          }
+          );
+        })
+      }
+    }
   }
 
 }
