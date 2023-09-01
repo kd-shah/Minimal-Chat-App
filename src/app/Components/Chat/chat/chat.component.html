@@ -1,5 +1,11 @@
 <div class="chat">
-    <div class="user-chat">
+    <div class="no-conversation-message" *ngIf="!messagesFound">
+        No conversation found.
+      </div>
+    
+    <div class="user-chat"  *ngIf="messagesFound">
+
+        
 
         <div *ngFor="let eachMessage of messages" class="messages" (contextmenu)="openContextMenu($event, eachMessage)">
             <li *ngIf="eachMessage.isEditing==false"
@@ -14,11 +20,11 @@
                 <form [formGroup]="editForm">
                     <input formControlName="editedMessage">
 
-                    <button type="submit" (click)="onSaveChanges()">
+                    <button type="submit" (click)="onSaveChanges()" >
                         Save
                     </button>
 
-                    <button (click)="onCancelChanges()">
+                    <button (click)="onCancelChanges()" >
                         Cancel
                     </button>
                 </form>
@@ -33,8 +39,8 @@
             class="context-menu">
 
             <ul>
-                <li (click)="onEditMessage()">Edit</li>
-                <li (click)="onDeleteMessage()">Delete</li>
+                <li (click)="onEditMessage()" class="option">Edit</li>
+                <li (click)="onDeleteMessage()" class="option">Delete</li>
             </ul>
 
         </div>

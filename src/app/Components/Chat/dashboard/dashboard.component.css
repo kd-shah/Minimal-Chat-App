@@ -1,15 +1,18 @@
-.navBar{
+.navBar {
     background-color: rgb(43, 43, 43);
     height: 70px;
     margin: -10px;
+    /* position: fixed; */
 }
-.button{
+
+.button {
     float: right;
     margin-right: 40px;
-    margin-top: 22px; 
+    margin-top: 22px;
     padding: 5px 20px;
 }
-.userName{
+
+.userName {
     font-size: 30px;
     margin-top: 10px;
     margin-left: -10px;
@@ -17,16 +20,20 @@
     padding: 10px;
     background-color: rgb(230, 230, 230);
 }
-.userList{
+
+.userList {
     background-color: rgb(43, 43, 43);
     width: 20%;
-    height: 100vh;
+    height: auto;
     margin-left: -10px;
 }
-.userDash{
+
+.userDash {
     display: flex;
 }
-.chat{
+
+.chat {
     background-color: rgb(95, 95, 95);
     width: 100%;
+    height: 78vh;
 }

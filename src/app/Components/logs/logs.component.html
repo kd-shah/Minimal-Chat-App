@@ -1,0 +1,42 @@
+<div class="container">
+    <h2>Request Logs</h2>
+  
+    <!-- Your log table -->
+    <!-- Timeframe selection -->
+<div class="form-group">
+    <label for="timeframe">Select Timeframe:</label>
+    <select class="form-control" id="timeframe">
+      <option value="5">Last 5 mins</option>
+      <option value="10">Last 10 mins</option>
+      <option value="30">Last 30 mins</option>
+      <option value="custom">Custom</option>
+    </select>
+  </div>
+  
+  <!-- Custom time range input -->
+  <div *ngIf="selectedTimeframe === 'custom'" class="form-group">
+    <label for="customTimeRange">Custom Time Range:</label>
+    <input type="text" class="form-control" id="customTimeRange" >
+  </div>
+  
+    
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Log ID</th>
+          <th>IP Address</th>
+          <th>Request Body</th>
+          <th>TimeStamp</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let log of logs">
+          <td>{{ log.logId }}</td>
+          <td>{{ log.ipAddress }}</td>
+          <td>{{ log.requestBody}}</td>
+          <td>{{ log.timeStamp}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  

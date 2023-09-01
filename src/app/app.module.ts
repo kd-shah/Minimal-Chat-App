@@ -11,6 +11,7 @@ import { AuthGuard } from './Guards/auth.guard';
 import { TokenInterceptor } from './Interceptors/token.interceptor';
 import { UserListComponent } from './Components/Chat/user-list/user-list.component';
 import { ChatComponent } from './Components/Chat/chat/chat.component';
+import { LogsComponent } from './Components/logs/logs.component';
 
 
 @NgModule({
@@ -21,6 +22,7 @@ import { ChatComponent } from './Components/Chat/chat/chat.component';
     DashboardComponent,
     UserListComponent,
     ChatComponent,
+    LogsComponent,
   ],
   imports: [
     BrowserModule,

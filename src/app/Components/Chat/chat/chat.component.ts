@@ -1,8 +1,8 @@
-import { Component, HostListener, Input, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { MessageService } from 'src/app/Services/message.service';
 import { ActivatedRoute } from '@angular/router';
 import { AuthService } from 'src/app/Services/auth.service';
-import { FormBuilder, Validators, FormGroup, FormsModule } from '@angular/forms';
+import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 
 
 interface Message {
@@ -23,7 +23,8 @@ interface Message {
 export class ChatComponent implements OnInit {
 
 
-  messages!: Message[]
+  messages!: Message[];
+  messagesFound = true;
 
   contextMenuVisible = false;
   contextMenuX = 0;
@@ -38,6 +39,9 @@ export class ChatComponent implements OnInit {
 
   loggedInUserId = this.auth.getUserId();
 
+  private beforeTimestamp: string | null = null;
+  private isLoading = false;
+  private isEndOfMessages = false;
 
   constructor(private route: ActivatedRoute,
     private message: MessageService,
@@ -49,13 +53,16 @@ export class ChatComponent implements OnInit {
     this.route.params.subscribe(params => {
       const userId = +params['userId'];
       this.message.receiverId = userId;
-      this.message.getMessages(userId).subscribe((response: any[]) => {
-        this.messages = response.map((msg: Message) => ({
-          ...msg,
-          isEditing: false,
-        }))
-      }
-      );
+
+      this.loadMessages();
+      // this.message.getMessages(userId).subscribe((response: any[]) => {
+      //   this.messages = response.map((msg: Message) => ({
+      //     ...msg,
+      //     isEditing: false,
+      //   }))
+      //   this.messagesFound = this.messages.length > 0;
+      // }
+      // );
     });
 
     this.sendForm = this.fb.group({
@@ -92,6 +99,64 @@ export class ChatComponent implements OnInit {
 
     }
   }
+
+  //Loading Initial Messages
+  loadMessages() {
+    console.log('Loading initial messages...');
+    console.log('Receiver ID:', this.message.receiverId);
+    console.log('Before Timestamp:', this.beforeTimestamp);
+    
+    if (this.message.receiverId != null) {
+      this.message.getMessages(this.message.receiverId, this.beforeTimestamp).subscribe((response: any[]) => {
+        this.messages = response.map((msg: Message) => ({
+          ...msg,
+          isEditing: false,
+        }));
+        this.messagesFound = this.messages.length > 0;
+
+        // Set the `beforeTimestamp` to the timestamp of the last message
+        if (this.messages.length > 0) {
+          this.beforeTimestamp = this.messages[this.messages.length - 1].timestamp;
+        }
+      });
+    }
+  }
+
+
+  //Load More Messages
+  loadMoreMessages() {
+    if (!this.isLoading && !this.isEndOfMessages && this.message.receiverId != null && this.beforeTimestamp != null) {
+      this.isLoading = true;
+      const receiverId = this.message.receiverId;
+
+      this.message.getMessages(this.message.receiverId, this.beforeTimestamp).subscribe((response: any[]) => {
+        const olderMessages = response.map((msg: Message) => ({
+          ...msg,
+          isEditing: false,
+        }));
+
+        if (olderMessages.length > 0) {
+          this.messages = [...olderMessages, ...this.messages];
+          this.beforeTimestamp = olderMessages[olderMessages.length - 1].timestamp;
+        } else {
+          // No more older messages to load
+          this.isEndOfMessages = true;
+        }
+
+        this.isLoading = false;
+      });
+    }
+  }
+
+  //Scrolling
+  @HostListener('scroll', ['$event.target'])
+  onScroll(chatWindow: HTMLElement) {
+    if (chatWindow.scrollTop === 0) {
+      this.loadMoreMessages();
+    }
+  }
+
+
 
   openContextMenu(event: MouseEvent, clickedMessage: any) {
     event.preventDefault(); // Prevent default browser context menu

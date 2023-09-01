@@ -9,20 +9,31 @@ export class MessageService {
 
   private baseUrl: string = "https://localhost:7034/api/"
 
-  private messageCreatedSubject = new Subject<any>();
+  // private messageCreatedSubject = new Subject<any>();
 
-  messageCreated$ = this.messageCreatedSubject.asObservable();
+  // messageCreated$ = this.messageCreatedSubject.asObservable();
 
-  private messageEditedSubject = new Subject<any>();
+  // private messageEditedSubject = new Subject<any>();
 
-  messageEdited$ = this.messageEditedSubject.asObservable();
+  // messageEdited$ = this.messageEditedSubject.asObservable();
 
 
   constructor(private http: HttpClient) { }
 
-  getMessages(userId: number) {
-    return this.http.get<any>(`${this.baseUrl}messages?userId=${userId}`)
+  // getMessages(userId: number) {
+  //   return this.http.get<any>(`${this.baseUrl}messages?userId=${userId}`)
+  // }
+
+  getMessages(userId: number, beforeTimestamp?: string | null) {
+    
+    let url = `${this.baseUrl}messages?userId=${userId}`;
+    if (beforeTimestamp) {
+      url += `&before=${beforeTimestamp}`;
+    }
+    return this.http.get<any>(url);
   }
+
+
 
   receiverId: number | null = null;
 
