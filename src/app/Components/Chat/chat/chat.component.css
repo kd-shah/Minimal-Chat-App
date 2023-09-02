@@ -1,0 +1,94 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    overflow: hidden;
+}
+
+li {
+    list-style: none;
+}
+
+.sentClass {
+    background-color: blanchedalmond;
+    align-self: flex-end;
+    margin-right: 10px;
+}
+
+.receivedClass {
+    background-color: beige;
+    align-self: flex-start;
+    margin-left: 10px;
+}
+
+.messages {
+    display: flex;
+    flex-direction: column;
+    margin: 10px;
+}
+
+.message-block {
+    height: 30px;
+    width: 300px;
+    display: flex;
+    justify-content: center;
+    padding-top: 10px;
+    border-radius: 20px;
+}
+
+.user-chat {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 60px;
+    height: 450px;
+    overflow-y: scroll;
+}
+
+.message-box {
+    position: fixed;
+    margin-left: -2px;
+    bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: rgb(58, 58, 58);
+}
+
+.context-menu {
+    position: fixed;
+    background-color: white;
+    z-index: 10;
+    padding-left: -25px;
+    width: 80px;
+}
+
+.option {
+    padding: 5px;
+}
+
+.option:hover {
+    cursor: pointer;
+    background-color: rgb(170, 255, 242);
+}
+
+.message {
+    width: 900px;
+    height: 20px;
+    padding: 5px;
+}
+
+.button {
+    height: 30px;
+    padding: 5px 40px;
+    margin: 0px 15px;
+
+}
+
+.no-conversation-message {
+    color: blanchedalmond;
+    font-size: 25px;
+    text-align: center;
+    margin-top: 100px;
+
+}

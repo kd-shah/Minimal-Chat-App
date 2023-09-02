@@ -1,0 +1,11 @@
+<nav class="navBar"><button (click)="onLogout()" class="button">Logout</button></nav>
+<div class="userName">{{user_name}}</div>
+
+<div class="userDash">
+    <div class="userList">
+        <app-user-list></app-user-list>
+    </div>
+    <div class="chat">
+        <router-outlet name="chatOutlet"></router-outlet>
+    </div>
+</div>

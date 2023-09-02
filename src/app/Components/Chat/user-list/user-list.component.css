@@ -1,0 +1,25 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+a{
+    text-decoration: none;
+    color: azure;
+}
+li{
+    list-style: none;
+    height: 50px;
+}
+.userList{
+    padding-top: 16px;
+    text-align: center;
+    color: white;
+}
+.line{
+    width: 150px;
+    margin-left: 15%;
+}
+.active {
+    background-color: #bea03a;
+}

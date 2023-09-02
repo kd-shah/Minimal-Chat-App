@@ -1,0 +1,50 @@
+/* Style for the container */
+.container {
+    margin: 20px;
+  }
+  
+  /* Style for the table */
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  
+  .table th, .table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+  }
+  
+  /* Style for the table header */
+  .table th {
+    background-color: #f2f2f2;
+  }
+  
+  /* Style for form group */
+  .form-group {
+    margin-bottom: 20px;
+  }
+  
+  /* Style for checkboxes */
+  .form-check-input {
+    margin-right: 5px;
+  }
+  
+  /* Style for labels */
+  label {
+    font-weight: bold;
+  }
+  
+  /* Style for custom time range inputs */
+  .form-control[type="datetime-local"] {
+    width: 100%;
+    padding: 5px;
+  }
+  
+  /* Style for the 'Select Columns to Show' label */
+  .form-group label {
+    display: block;
+    margin-bottom: 5px;
+  }
+  
