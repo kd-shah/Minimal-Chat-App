@@ -1,4 +1,7 @@
 body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
     overflow: hidden;
 }
 
@@ -43,7 +46,8 @@ li {
 
 .message-box {
     position: fixed;
-    bottom: 0;
+    margin-left: -2px;
+    bottom: 10px;
     display: flex;
     justify-content: space-between;
     align-items: center;

@@ -20,3 +20,6 @@ li{
     width: 150px;
     margin-left: 15%;
 }
+.active {
+    background-color: #bea03a;
+}
