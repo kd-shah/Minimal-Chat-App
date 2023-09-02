@@ -1,8 +1,9 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener, NgModule, OnInit } from '@angular/core';
 import { MessageService } from 'src/app/Services/message.service';
 import { ActivatedRoute } from '@angular/router';
 import { AuthService } from 'src/app/Services/auth.service';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
+import { switchMap } from 'rxjs';
 
 
 interface Message {
@@ -12,8 +13,8 @@ interface Message {
   content: string,
   timestamp: string,
   isEditing: boolean;
-
 }
+
 
 @Component({
   selector: 'app-chat',
@@ -65,6 +66,7 @@ export class ChatComponent implements OnInit {
       // );
     });
 
+
     this.sendForm = this.fb.group({
       message: ['', Validators.required]
     })
@@ -84,62 +86,77 @@ export class ChatComponent implements OnInit {
     this.sentMessage = this.sendForm.value.message;
     if (this.message.receiverId !== null && this.sentMessage !== '') {
       const receiverId = this.message.receiverId;
+      this.messagesFound = true;
       this.message.sendMessages(receiverId, this.sentMessage)
-        .subscribe(response => {
-          console.log('Message sent:', response);
+        .pipe(
+          switchMap(() => this.message.getMessages(receiverId))
+        )
+        .subscribe((response: any[]) => {
           this.sendForm.reset();
-          this.message.getMessages(receiverId).subscribe((response: any[]) => {
-            this.messages = response.map((msg: Message) => ({
-              ...msg,
-              isEditing: false,
-            }))
-          }
-          );
-        })
+          this.messages = response.map((msg: Message) => ({
+            ...msg,
+            isEditing: false,
+          })).reverse();
+        }
+        );
+
 
     }
   }
+
 
   //Loading Initial Messages
   loadMessages() {
     console.log('Loading initial messages...');
     console.log('Receiver ID:', this.message.receiverId);
     console.log('Before Timestamp:', this.beforeTimestamp);
-    
-    if (this.message.receiverId != null) {
-      this.message.getMessages(this.message.receiverId, this.beforeTimestamp).subscribe((response: any[]) => {
-        this.messages = response.map((msg: Message) => ({
-          ...msg,
-          isEditing: false,
-        }));
-        this.messagesFound = this.messages.length > 0;
 
-        // Set the `beforeTimestamp` to the timestamp of the last message
-        if (this.messages.length > 0) {
-          this.beforeTimestamp = this.messages[this.messages.length - 1].timestamp;
-        }
-      });
+    if (this.message.receiverId != null) {
+      this.message.getMessages(this.message.receiverId, this.beforeTimestamp)
+        .subscribe((response: any[]) => {
+          this.messages = response.map((msg: Message) => ({
+            ...msg,
+            isEditing: false,
+          })).reverse();
+          this.messagesFound = this.messages.length > 0;
+
+          setTimeout(() => {
+            this.scrollToBottom();
+          });
+
+          // Set the `beforeTimestamp` to the timestamp of the last message
+          if (this.messages.length > 0) {
+            this.beforeTimestamp = this.messages[0].timestamp;
+          }
+        });
     }
   }
 
+  scrollToBottom() {
+    const messageContainer = document.querySelector('.user-chat');
+    if (messageContainer) {
+      messageContainer.scrollTop = messageContainer.scrollHeight;
+    }
+  }
 
-  //Load More Messages
+  // Load More Messages
   loadMoreMessages() {
     if (!this.isLoading && !this.isEndOfMessages && this.message.receiverId != null && this.beforeTimestamp != null) {
       this.isLoading = true;
       const receiverId = this.message.receiverId;
 
-      this.message.getMessages(this.message.receiverId, this.beforeTimestamp).subscribe((response: any[]) => {
+      this.message.getMessages(receiverId, this.beforeTimestamp).subscribe((response: any[]) => {
         const olderMessages = response.map((msg: Message) => ({
           ...msg,
           isEditing: false,
-        }));
+        })).reverse();
 
         if (olderMessages.length > 0) {
           this.messages = [...olderMessages, ...this.messages];
-          this.beforeTimestamp = olderMessages[olderMessages.length - 1].timestamp;
+          this.beforeTimestamp = olderMessages[0].timestamp;
+          
         } else {
-          // No more older messages to load
+          
           this.isEndOfMessages = true;
         }
 
@@ -148,18 +165,19 @@ export class ChatComponent implements OnInit {
     }
   }
 
-  //Scrolling
+  // Scrolling
   @HostListener('scroll', ['$event.target'])
-  onScroll(chatWindow: HTMLElement) {
-    if (chatWindow.scrollTop === 0) {
+  onScroll(userChat: HTMLElement) {
+    if (userChat.scrollTop === 0) {
       this.loadMoreMessages();
+      console.log("the end")
     }
   }
 
 
 
   openContextMenu(event: MouseEvent, clickedMessage: any) {
-    event.preventDefault(); // Prevent default browser context menu
+    event.preventDefault();
     if (clickedMessage.senderId == this.loggedInUserId) {
       this.contextMenuX = event.clientX;
       this.contextMenuY = event.clientY;
@@ -200,7 +218,8 @@ export class ChatComponent implements OnInit {
               this.messages = response.map((msg: Message) => ({
                 ...msg,
                 isEditing: false,
-              }))
+              })).reverse()
+
             }
             );
 
@@ -229,7 +248,8 @@ export class ChatComponent implements OnInit {
             this.messages = response.map((msg: Message) => ({
               ...msg,
               isEditing: false,
-            }))
+            })).reverse()
+            this.messagesFound = this.messages.length > 0;
           }
           );
         })

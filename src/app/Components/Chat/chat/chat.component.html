@@ -3,12 +3,12 @@
         No conversation found.
       </div>
     
-    <div class="user-chat"  *ngIf="messagesFound">
+    <div class="user-chat"  *ngIf="messagesFound" #userChat (scroll)="onScroll(userChat)">
 
         
 
-        <div *ngFor="let eachMessage of messages" class="messages" (contextmenu)="openContextMenu($event, eachMessage)">
-            <li *ngIf="eachMessage.isEditing==false"
+        <div *ngFor="let eachMessage of messages" class="messages" >
+            <li *ngIf="eachMessage.isEditing==false" (contextmenu)="openContextMenu($event, eachMessage)"
                 [ngClass]="['message-block', eachMessage.senderId == loggedInUserId ? 'sentClass' : 'receivedClass']">
 
                 {{eachMessage.content}}
@@ -38,10 +38,10 @@
         <div *ngIf="contextMenuVisible" [style.left.px]="contextMenuX" [style.top.px]="contextMenuY"
             class="context-menu">
 
-            <ul>
+            
                 <li (click)="onEditMessage()" class="option">Edit</li>
                 <li (click)="onDeleteMessage()" class="option">Delete</li>
-            </ul>
+            
 
         </div>
 

@@ -12,6 +12,7 @@ import { TokenInterceptor } from './Interceptors/token.interceptor';
 import { UserListComponent } from './Components/Chat/user-list/user-list.component';
 import { ChatComponent } from './Components/Chat/chat/chat.component';
 import { LogsComponent } from './Components/logs/logs.component';
+import { FormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -28,7 +29,9 @@ import { LogsComponent } from './Components/logs/logs.component';
     BrowserModule,
     AppRoutingModule,
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
+    FormsModule
+
   ],
   providers: [AuthGuard, { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true }],
   bootstrap: [AppComponent]
