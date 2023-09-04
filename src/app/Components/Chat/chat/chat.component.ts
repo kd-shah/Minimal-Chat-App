@@ -1,9 +1,9 @@
-import { Component, ElementRef, HostListener, NgModule, OnInit, ViewChild } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { MessageService } from 'src/app/Services/message.service';
 import { ActivatedRoute } from '@angular/router';
 import { AuthService } from 'src/app/Services/auth.service';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
-import { switchMap, timestamp } from 'rxjs';
+import { switchMap} from 'rxjs';
 
 
 interface Message {
@@ -40,7 +40,6 @@ export class ChatComponent implements OnInit {
 
   loggedInUserId = this.auth.getUserId();
 
-  @ViewChild('messageContainer') messageContainer!: ElementRef;
 
   private beforeTimestamp: string | null = null;
   private isLoading = false;
