@@ -1,9 +1,9 @@
-import { Component, HostListener, NgModule, OnInit } from '@angular/core';
+import { Component, ElementRef, HostListener, NgModule, OnInit, ViewChild } from '@angular/core';
 import { MessageService } from 'src/app/Services/message.service';
 import { ActivatedRoute } from '@angular/router';
 import { AuthService } from 'src/app/Services/auth.service';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
-import { switchMap } from 'rxjs';
+import { switchMap, timestamp } from 'rxjs';
 
 
 interface Message {
@@ -25,7 +25,7 @@ export class ChatComponent implements OnInit {
 
 
   messages!: Message[];
-  messagesFound = true;
+  messagesFound!: boolean;
 
   contextMenuVisible = false;
   contextMenuX = 0;
@@ -39,6 +39,8 @@ export class ChatComponent implements OnInit {
 
 
   loggedInUserId = this.auth.getUserId();
+
+  @ViewChild('messageContainer') messageContainer!: ElementRef;
 
   private beforeTimestamp: string | null = null;
   private isLoading = false;
@@ -55,15 +57,9 @@ export class ChatComponent implements OnInit {
       const userId = +params['userId'];
       this.message.receiverId = userId;
 
+      console.log('ngOnInit called with userId:', userId);
+      this.messagesFound = true;
       this.loadMessages();
-      // this.message.getMessages(userId).subscribe((response: any[]) => {
-      //   this.messages = response.map((msg: Message) => ({
-      //     ...msg,
-      //     isEditing: false,
-      //   }))
-      //   this.messagesFound = this.messages.length > 0;
-      // }
-      // );
     });
 
 
@@ -75,13 +71,95 @@ export class ChatComponent implements OnInit {
       editedMessage: ['', Validators.required]
     })
 
-    // this.message.messageCreated$.subscribe((newMessage: any) => {
-    //   console.log('New message received:', newMessage);
-    //   this.messages.push(newMessage);
-    // });
   }
 
+  //Loading Initial Messages
+  loadMessages() {
+    if (this.message.receiverId != null) {
+      this.messagesFound = true;
+      this.message.getMessages(this.message.receiverId, this.beforeTimestamp)
+        .subscribe((response: any[]) => {
+          this.messages = response.map((msg: Message) => ({
+            ...msg,
+            isEditing: false,
+          })).reverse();
+          this.messagesFound = this.messages.length > 0;
 
+          setTimeout(() => {
+            this.scrollToBottom();
+          });
+
+          console.log('messagesFound:', this.messagesFound);
+
+
+        }, (error) => {
+          console.error('Error fetching messages:', error);
+        }
+        );
+    }
+
+  }
+
+  //Auto scrolling to last message
+  scrollToBottom() {
+    const messageContainer = document.querySelector('.user-chat');
+    if (messageContainer) {
+      messageContainer.scrollTop = messageContainer.scrollHeight;
+    }
+  }
+
+  
+  
+  
+  // Load More Messages
+
+  loadMoreMessages() {
+
+    if (!this.isLoading && !this.isEndOfMessages && this.message.receiverId != null) {
+      this.isLoading = true;
+      const receiverId = this.message.receiverId;
+
+      console.log(this.messages)
+
+      
+      this.beforeTimestamp = this.messages[0].timestamp;
+      console.log(this.beforeTimestamp)
+
+
+      this.message.getMessages(receiverId, this.beforeTimestamp).subscribe((response: any[]) => {
+        const olderMessages = response.map((msg: Message) => ({
+          ...msg,
+          isEditing: false,
+        })).reverse();
+
+        if (olderMessages.length > 0) {
+          this.messages = [...olderMessages, ...this.messages];
+          this.beforeTimestamp = olderMessages[0].timestamp;
+
+         
+
+        } else {
+
+          this.isEndOfMessages = true;
+        }
+
+        this.isLoading = false;
+      });
+    }
+  }
+
+  //User scrolls on top
+  @HostListener('scroll', ['$event.target'])
+  onScroll(userChat: HTMLElement) {
+    console.log(typeof userChat.scrollTop, 'Scroll event triggered');
+
+    if (userChat.scrollTop === 0) {
+      console.log('Scroll to the top');
+      this.loadMoreMessages();
+    }
+  }
+
+  //Sending a message
   onSendMessage() {
     this.sentMessage = this.sendForm.value.message;
     if (this.message.receiverId !== null && this.sentMessage !== '') {
@@ -104,78 +182,7 @@ export class ChatComponent implements OnInit {
     }
   }
 
-
-  //Loading Initial Messages
-  loadMessages() {
-    console.log('Loading initial messages...');
-    console.log('Receiver ID:', this.message.receiverId);
-    console.log('Before Timestamp:', this.beforeTimestamp);
-
-    if (this.message.receiverId != null) {
-      this.message.getMessages(this.message.receiverId, this.beforeTimestamp)
-        .subscribe((response: any[]) => {
-          this.messages = response.map((msg: Message) => ({
-            ...msg,
-            isEditing: false,
-          })).reverse();
-          this.messagesFound = this.messages.length > 0;
-
-          setTimeout(() => {
-            this.scrollToBottom();
-          });
-
-          // Set the `beforeTimestamp` to the timestamp of the last message
-          if (this.messages.length > 0) {
-            this.beforeTimestamp = this.messages[0].timestamp;
-          }
-        });
-    }
-  }
-
-  scrollToBottom() {
-    const messageContainer = document.querySelector('.user-chat');
-    if (messageContainer) {
-      messageContainer.scrollTop = messageContainer.scrollHeight;
-    }
-  }
-
-  // Load More Messages
-  loadMoreMessages() {
-    if (!this.isLoading && !this.isEndOfMessages && this.message.receiverId != null && this.beforeTimestamp != null) {
-      this.isLoading = true;
-      const receiverId = this.message.receiverId;
-
-      this.message.getMessages(receiverId, this.beforeTimestamp).subscribe((response: any[]) => {
-        const olderMessages = response.map((msg: Message) => ({
-          ...msg,
-          isEditing: false,
-        })).reverse();
-
-        if (olderMessages.length > 0) {
-          this.messages = [...olderMessages, ...this.messages];
-          this.beforeTimestamp = olderMessages[0].timestamp;
-          
-        } else {
-          
-          this.isEndOfMessages = true;
-        }
-
-        this.isLoading = false;
-      });
-    }
-  }
-
-  // Scrolling
-  @HostListener('scroll', ['$event.target'])
-  onScroll(userChat: HTMLElement) {
-    if (userChat.scrollTop === 0) {
-      this.loadMoreMessages();
-      console.log("the end")
-    }
-  }
-
-
-
+  // Opening context menu
   openContextMenu(event: MouseEvent, clickedMessage: any) {
     event.preventDefault();
     if (clickedMessage.senderId == this.loggedInUserId) {
@@ -187,6 +194,7 @@ export class ChatComponent implements OnInit {
 
   }
 
+  //Closing context menu
   closeContextMenu() {
     this.contextMenuVisible = false;
   }
@@ -198,6 +206,7 @@ export class ChatComponent implements OnInit {
     this.closeContextMenu();
   }
 
+  //Editing a message
   onEditMessage() {
     if (this.contextMenuMessage !== null) {
       this.contextMenuMessage.isEditing = true;
@@ -206,6 +215,7 @@ export class ChatComponent implements OnInit {
     this.closeContextMenu();
   }
 
+  //Save Edited Message
   onSaveChanges() {
     if (this.contextMenuMessage !== null && this.contextMenuMessage.id !== null) {
       const receiverId = this.message.receiverId;
@@ -231,6 +241,7 @@ export class ChatComponent implements OnInit {
     }
   }
 
+  // Cancel editing message
   onCancelChanges() {
     if (this.contextMenuMessage !== null) {
       this.contextMenuMessage.isEditing = false;
@@ -238,6 +249,7 @@ export class ChatComponent implements OnInit {
     this.closeContextMenu();
   }
 
+  // Deleting message
   onDeleteMessage() {
     if (this.contextMenuMessage !== null) {
       const receiverId = this.message.receiverId;

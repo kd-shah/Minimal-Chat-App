@@ -24,7 +24,7 @@
       </div>
     </ng-container>
 
-  <div class="form-group">
+  <div class="form-group checkbox">
     <label>Select Columns to Show:</label>
     <div class="form-check" *ngFor="let column of selectedColumns">
       <input class="form-check-input" type="checkbox" [(ngModel)]="columnVisibility[column]" [id]="column">
