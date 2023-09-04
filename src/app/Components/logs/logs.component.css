@@ -30,6 +30,16 @@
   .form-check-input {
     margin-right: 5px;
   }
+  .form-check {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .checkbox{
+    display: flex;
+    gap: 20px;
+  }
+  
   
   /* Style for labels */
   label {
