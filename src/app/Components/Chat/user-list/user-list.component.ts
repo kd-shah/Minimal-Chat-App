@@ -1,6 +1,6 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { MessageService } from 'src/app/Services/message.service';
+import { Component } from '@angular/core';
 import { UserService } from 'src/app/Services/user.service';
+import { User } from 'src/app/Components/Chat/user-list/model';
 
 @Component({
   selector: 'app-user-list',
@@ -9,7 +9,7 @@ import { UserService } from 'src/app/Services/user.service';
 })
 export class UserListComponent {
 
-  public users: any =[];
+  users!: User[] ;
   
   constructor(private user: UserService ){
   }

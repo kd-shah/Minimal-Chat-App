@@ -85,6 +85,20 @@ li {
 
 }
 
+.editInput{
+    border-radius: 5px;
+    width: 50%;
+    outline: none;
+}
+.optionButton{
+    background-color: black;
+    color: white;
+    border: none;
+    outline: none;
+    padding: 5px;
+    margin: 0px 3px;
+}
+
 .no-conversation-message {
     color: blanchedalmond;
     font-size: 25px;

@@ -18,15 +18,18 @@
                 [ngClass]="['message-block', eachMessage.senderId == loggedInUserId ? 'sentClass' : 'receivedClass']">
 
                 <form [formGroup]="editForm">
-                    <input formControlName="editedMessage">
+                    <input formControlName="editedMessage" class="editInput">
 
-                    <button type="submit" (click)="onSaveChanges()" >
-                        Save
-                    </button>
+                  
 
-                    <button (click)="onCancelChanges()" >
-                        Cancel
-                    </button>
+                        <button type="submit" (click)="onSaveChanges()" class="optionButton" >
+                            Save
+                        </button>
+    
+                        <button (click)="onCancelChanges()" class="optionButton" >
+                            Cancel
+                        </button>
+                    
                 </form>
 
 

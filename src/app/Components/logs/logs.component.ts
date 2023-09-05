@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { LogService } from 'src/app/Services/log.service';
-import { FormsModule } from '@angular/forms';
+import { Log } from './model';
 
 @Component({
   selector: 'app-logs',
@@ -12,7 +12,7 @@ export class LogsComponent implements OnInit{
   selectedTimeframe: string = '5';
   customStartTime: string = '';
   customEndTime: string = '';
-  logs: any[] = [];
+  logs: Log[] = [];
 
   selectedColumns: string[] = ['logId', 'ipAddress', 'requestBody', 'timeStamp'];
 
