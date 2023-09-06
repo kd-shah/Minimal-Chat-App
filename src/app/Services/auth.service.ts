@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { LoginRequest, LoginResponse, RegisterRequest, RegisterResponse } from './model';
 
 @Injectable({
   providedIn: 'root'
@@ -8,12 +9,12 @@ export class AuthService {
 
   private baseUrl: string = "https://localhost:7034/api/"
   constructor(private http: HttpClient) { }
-  register(userObj:any){
-    return this.http.post<any>(`${this.baseUrl}register`, userObj)
+  register(userObj:RegisterRequest){
+    return this.http.post<RegisterResponse>(`${this.baseUrl}register`, userObj)
   }
 
-    login(loginObj:any){
-    return this.http.post<any>(`${this.baseUrl}login`, loginObj)
+    login(loginObj: LoginRequest){
+    return this.http.post<LoginResponse>(`${this.baseUrl}login`, loginObj)
   }
 
   isLoggedIn(): boolean{

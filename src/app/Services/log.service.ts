@@ -1,5 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Log } from 'src/app/Components/logs/model';
 
 @Injectable({
   providedIn: 'root'
@@ -21,7 +22,7 @@ export class LogService {
       params = params.set('timeframe', selectedTimeframe);
     }
 
-    return this.http.get<any[]>(`${this.baseUrl}log`, { params });
+    return this.http.get<Log[]>(`${this.baseUrl}log`, { params });
 
     
   }

@@ -12,15 +12,15 @@
     </div>
     <ng-container *ngIf="selectedTimeframe === 'custom'">
       <div class="form-group">
-        <label for="customStartTime">Custom Start Time:</label>
+        <label for="customStartTime">Start Time:</label>
         <input type="datetime-local" class="form-control" id="customStartTime" [(ngModel)]="customStartTime">
       </div>
       <div class="form-group">
-        <label for="customEndTime">Custom End Time:</label>
+        <label for="customEndTime">End Time:</label>
         <input type="datetime-local" class="form-control" id="customEndTime" [(ngModel)]="customEndTime">
       </div>
       <div>
-        <button (click)="onCustomSelect()">Submit</button> 
+        <button (click)="onCustomSelect()" class="submit-button">Fetch Logs</button> 
       </div>
     </ng-container>
 

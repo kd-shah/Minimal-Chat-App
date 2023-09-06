@@ -1,6 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Subject, catchError, tap } from 'rxjs';
+import { MessageResponse } from './model';
+import { SendMessageRequest } from './model';
+import { EditMessageRequest } from './model';
 
 @Injectable({
   providedIn: 'root'
@@ -9,69 +11,31 @@ export class MessageService {
 
   private baseUrl: string = "https://localhost:7034/api/"
 
-  // private messageCreatedSubject = new Subject<any>();
-
-  // messageCreated$ = this.messageCreatedSubject.asObservable();
-
-  // private messageEditedSubject = new Subject<any>();
-
-  // messageEdited$ = this.messageEditedSubject.asObservable();
-
-
   constructor(private http: HttpClient) { }
 
-  // getMessages(userId: number) {
-  //   return this.http.get<any>(`${this.baseUrl}messages?userId=${userId}`)
-  // }
 
   getMessages(userId: number, beforeTimestamp?: string | null) {
-    
+
     let url = `${this.baseUrl}messages?userId=${userId}`;
     if (beforeTimestamp) {
       url += `&before=${beforeTimestamp}`;
     }
-    return this.http.get<any>(url);
+    return this.http.get<MessageResponse[]>(url);
   }
 
+  receiverId!: number;
 
-
-  receiverId: number | null = null;
-
-  // sendMessages(userId: number | null, content: any) {
-  //   const requestBody = { content: content };
-  //   return this.http.post<any>(`${this.baseUrl}messages?receiverId=${userId}`, requestBody)
-  //     .pipe(
-  //       tap((response: any) => {
-  //         this.messageCreatedSubject.next(response);
-  //       }),
-  //       catchError((error: any) => {
-  //         console.error('Error sending message:', error);
-  //         throw error; // Rethrow the error
-  //       })
-  //     );
-  // }
-
-  sendMessages(userId: number | null, content: any) {
+  sendMessages(userId: number, content: string) {
     const requestBody = { content: content };
-    return this.http.post<any>(`${this.baseUrl}messages?receiverId=${userId}`, requestBody)
+    return this.http.post<SendMessageRequest>(`${this.baseUrl}messages?receiverId=${userId}`, requestBody)
   }
 
-  // editMessage(id: number | null, content: any) {
-  //   const requestBody = { content: content };
-  //   return this.http.put<any>(`${this.baseUrl}messages/${id}`, requestBody)
-  //     .pipe(
-  //       tap((response: any) => {
-  //         this.messageEditedSubject.next(response);
-  //       })
-  //     );
-  // }
-
-  editMessage(id: number | null, content: any) {
+  editMessage(messageId: number, content: string) {
     const requestBody = { content: content };
-    return this.http.put<any>(`${this.baseUrl}messages/${id}`, requestBody)
+    return this.http.put<EditMessageRequest>(`${this.baseUrl}messages/${messageId}`, requestBody)
   }
 
-  deleteMessage(id: number){
-    return this.http.delete<any>(`${this.baseUrl}messages/${id}`)
+  deleteMessage(messageId: number) {
+    return this.http.delete<number>(`${this.baseUrl}messages/${messageId}`)
   }
 } 

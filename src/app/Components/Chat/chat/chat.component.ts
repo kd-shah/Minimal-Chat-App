@@ -3,17 +3,8 @@ import { MessageService } from 'src/app/Services/message.service';
 import { ActivatedRoute } from '@angular/router';
 import { AuthService } from 'src/app/Services/auth.service';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
-import { switchMap} from 'rxjs';
-
-
-interface Message {
-  id: number,
-  senderId: any,
-  receiverId: number,
-  content: string,
-  timestamp: string,
-  isEditing: boolean;
-}
+import { switchMap } from 'rxjs';
+import { Message, MessageResponse } from './model';
 
 
 @Component({
@@ -33,7 +24,7 @@ export class ChatComponent implements OnInit {
   contextMenuMessage: Message | null = null;
 
   sendForm!: FormGroup
-  sentMessage: any;
+  sentMessage!: string;
 
   editForm!: FormGroup;
 
@@ -76,9 +67,9 @@ export class ChatComponent implements OnInit {
   loadMessages() {
     if (this.message.receiverId != null) {
       this.messagesFound = true;
-      this.message.getMessages(this.message.receiverId, this.beforeTimestamp)
-        .subscribe((response: any[]) => {
-          this.messages = response.map((msg: Message) => ({
+      this.message.getMessages(this.message.receiverId)
+        .subscribe((response: MessageResponse[]) => {
+          this.messages = response.map((msg: MessageResponse) => ({
             ...msg,
             isEditing: false,
           })).reverse();
@@ -107,35 +98,41 @@ export class ChatComponent implements OnInit {
     }
   }
 
-  
-  
-  
   // Load More Messages
 
   loadMoreMessages() {
-
-    if (!this.isLoading && !this.isEndOfMessages && this.message.receiverId != null) {
+    if (!this.isLoading || !this.isEndOfMessages && this.message.receiverId != null) {
       this.isLoading = true;
       const receiverId = this.message.receiverId;
 
       console.log(this.messages)
 
-      
+      // Scroll to junction
+      const scrollContainer = document.querySelector('.user-chat');
+      const scrollOffset = scrollContainer ? scrollContainer.scrollHeight - scrollContainer.scrollTop : 0;
+
       this.beforeTimestamp = this.messages[0].timestamp;
       console.log(this.beforeTimestamp)
 
 
-      this.message.getMessages(receiverId, this.beforeTimestamp).subscribe((response: any[]) => {
-        const olderMessages = response.map((msg: Message) => ({
+      this.message.getMessages(receiverId, this.beforeTimestamp).subscribe((response: MessageResponse[]) => {
+        console.log(this.beforeTimestamp);
+        const olderMessages = response.map((msg: MessageResponse) => ({
           ...msg,
           isEditing: false,
         })).reverse();
 
         if (olderMessages.length > 0) {
           this.messages = [...olderMessages, ...this.messages];
-          this.beforeTimestamp = olderMessages[0].timestamp;
+          // this.beforeTimestamp = olderMessages[0].timestamp;
+          this.beforeTimestamp = ''
+          if (scrollContainer) {
+            setTimeout(() => {
+              scrollContainer.scrollTop = scrollContainer.scrollHeight - scrollOffset;
+            });
+          }
 
-         
+        
 
         } else {
 
@@ -168,21 +165,23 @@ export class ChatComponent implements OnInit {
         .pipe(
           switchMap(() => this.message.getMessages(receiverId))
         )
-        .subscribe((response: any[]) => {
+        .subscribe((response: MessageResponse[]) => {
           this.sendForm.reset();
-          this.messages = response.map((msg: Message) => ({
+          this.messages = response.map((msg: MessageResponse) => ({
             ...msg,
             isEditing: false,
           })).reverse();
         }
         );
-
+        setTimeout(() => {
+          this.scrollToBottom();
+        });
 
     }
   }
 
   // Opening context menu
-  openContextMenu(event: MouseEvent, clickedMessage: any) {
+  openContextMenu(event: MouseEvent, clickedMessage: Message) {
     event.preventDefault();
     if (clickedMessage.senderId == this.loggedInUserId) {
       this.contextMenuX = event.clientX;
@@ -223,8 +222,8 @@ export class ChatComponent implements OnInit {
           .subscribe(response => {
             console.log('Message edited:', response);
             this.editForm.reset();
-            this.message.getMessages(receiverId).subscribe((response: any[]) => {
-              this.messages = response.map((msg: Message) => ({
+            this.message.getMessages(receiverId).subscribe((response: MessageResponse[]) => {
+              this.messages = response.map((msg: MessageResponse) => ({
                 ...msg,
                 isEditing: false,
               })).reverse()
@@ -255,8 +254,8 @@ export class ChatComponent implements OnInit {
       if (receiverId !== null) {
         this.message.deleteMessage(this.contextMenuMessage.id).subscribe(response => {
           console.log(response);
-          this.message.getMessages(receiverId).subscribe((response: any[]) => {
-            this.messages = response.map((msg: Message) => ({
+          this.message.getMessages(receiverId).subscribe((response: MessageResponse[]) => {
+            this.messages = response.map((msg: MessageResponse) => ({
               ...msg,
               isEditing: false,
             })).reverse()
