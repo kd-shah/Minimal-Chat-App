@@ -1,13 +1,11 @@
 <div class="chat">
     <div class="no-conversation-message" *ngIf="!messagesFound">
         No conversation found.
-      </div>
-    
-    <div class="user-chat"  *ngIf="messagesFound" #userChat (scroll)="onScroll(userChat)">
+    </div>
 
-        
+    <div class="user-chat" *ngIf="messagesFound" #userChat (scroll)="onScroll(userChat)">
 
-        <div *ngFor="let eachMessage of messages" class="messages" >
+        <div *ngFor="let eachMessage of messages" class="messages">
             <li *ngIf="eachMessage.isEditing==false" (contextmenu)="openContextMenu($event, eachMessage)"
                 [ngClass]="['message-block', eachMessage.senderId == loggedInUserId ? 'sentClass' : 'receivedClass']">
 
@@ -19,35 +17,25 @@
 
                 <form [formGroup]="editForm">
                     <input formControlName="editedMessage" class="editInput">
+                    <button type="submit" (click)="onSaveChanges()" class="optionButton">
+                        Save
+                    </button>
 
-                  
-
-                        <button type="submit" (click)="onSaveChanges()" class="optionButton" >
-                            Save
-                        </button>
-    
-                        <button (click)="onCancelChanges()" class="optionButton" >
-                            Cancel
-                        </button>
-                    
+                    <button (click)="onCancelChanges()" class="optionButton">
+                        Cancel
+                    </button>
                 </form>
-
-
             </li>
-
-
         </div>
 
         <div *ngIf="contextMenuVisible" [style.left.px]="contextMenuX" [style.top.px]="contextMenuY"
             class="context-menu">
 
-            
-                <li (click)="onEditMessage()" class="option">Edit</li>
-                <li (click)="onDeleteMessage()" class="option">Delete</li>
-            
+
+            <li (click)="onEditMessage()" class="option">Edit</li>
+            <li (click)="onDeleteMessage()" class="option">Delete</li>
 
         </div>
-
 
     </div>
     <form class="message-box" [formGroup]="sendForm">

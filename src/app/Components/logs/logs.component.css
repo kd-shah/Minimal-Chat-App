@@ -27,6 +27,11 @@ h2{
   margin-bottom: 20px;
   display: flex;
 }
+.submit-button{
+  background-color: black;
+  color: white;
+  margin-bottom: 20px;
+}
 
 
 .form-check-input {

@@ -38,7 +38,6 @@ export class LogsComponent implements OnInit{
       endTime = this.customEndTime;
     }
   
-
     this.log.getLogs(this.selectedTimeframe, startTime, endTime)
       .subscribe((data) => {
         this.logs = data;
@@ -46,17 +45,12 @@ export class LogsComponent implements OnInit{
   }
 
   onTimeframeChange() {
-    
-    
     if (this.selectedTimeframe !== 'custom') {
       this.customStartTime = ''; 
       this.customEndTime = ''; 
      
     }
     this.getLogs();
-   
-      
-    
   }
 
   onCustomSelect(){

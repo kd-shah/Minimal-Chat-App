@@ -16,22 +16,8 @@ export class AuthGuard implements CanActivate {
     } else {
       console.log('Access Denied');
       this.router.navigate(['/login']);
-      // this.toast.error({detail: "ERROR", summary: "Please login first!", duration: 2000})
       return false;
     }
   }
-  
-  // canActivate():boolean{
-  //     if (this.auth.isLoggedIn()){
-  //       console.log("Access Granted")
-  //       return true;
-  //     }
-  //     else{
-  //       console.log("Access Denied")
-  //       this.router.navigate(['/login'])
-  //       return false
-  //     }
-
-  // }
   
 };

@@ -98,9 +98,6 @@ export class ChatComponent implements OnInit {
     }
   }
 
-
-
-
   // Load More Messages
 
   loadMoreMessages() {
